@@ -37,6 +37,8 @@ Aura operates on a strict **Role-Based Access Control (RBAC)** model powered by 
 
 | Feature | Functionality | Google Tech Powering It |
 | :--- | :--- | :--- |
+| **Aura AI Companion** | **NEW!** A context-aware chatbot fluent in **Hinglish**, Hindi, and English. Acts as a supportive "Study Buddy" for venting and planning. | **Gemini 2.0 Flash** (System Instructions) |
+| **Micro-Communities** | **NEW!** User-generated interest groups (e.g., "Coding Club") with **Anonymous Aliases** (e.g., "Neon Fox"). Features dynamic AI-generated UI themes based on group names. | **Firestore** + **React** |
 | **Mindset Dashboard** | Central HUD showing "Internal Weather" (mood) vs. Sleep Debt. | **Firestore Realtime** |
 | **Flow State (FocusZone)** | 40Hz Gamma wave generator & Pomodoro timer with "Group Sync" to feel presence without video. | **Web Audio API** (Client) |
 | **Productivity-Emotion Nexus (PEN)** | A chart correlating focus blocks with mood dips to identify specific burnout hours. | **Recharts** + **Firestore Aggregations** |
@@ -44,7 +46,6 @@ Aura operates on a strict **Role-Based Access Control (RBAC)** model powered by 
 | **Adaptive Rituals Engine** | AI suggests micro-habits (e.g., "Morning Sun") based on yesterday's sleep data. | **Cloud Functions** + **Gemini** |
 | **Future Simulator** | Generates 3 distinct future career paths to combat "Future Anxiety" and catastrophic thinking. | **Gemini Pro** (Creative Generation) |
 | **Campfire** | Anonymous, topic-based peer chat (e.g., "Exam Stress") with zero identity leakage. | **Firestore** + **Cloud Functions** |
-| **Spontaneous Pulses** | Real-time "Check-ins" that appear during high-traffic times to gauge campus vibe. | **Cloud Messaging** (FCM) |
 
 ### 🛡️ B. Peer Mentor Role (The First Responders)
 *Focus: Triage, Empathy & Traffic Control*
@@ -61,6 +62,7 @@ Aura operates on a strict **Role-Based Access Control (RBAC)** model powered by 
 
 | Feature | Functionality | Google Tech Powering It |
 | :--- | :--- | :--- |
+| **Community God Mode** | Full governance over user-created groups, including banning users and deleting toxic communities. | **Firestore** (Write Batches) |
 | **Dropout Radar** | Identifies students with high "Life Load" and low "Engagement" (anonymized). | **Vertex AI** (Predictive Modeling) |
 | **Faculty Stress Index** | Correlates stress spikes with specific departments/faculties. | **Looker Studio** (Visualization) |
 | **Policy Simulator** | "What if we delay exams by 2 days?" AI simulates the drop in stress levels. | **Gemini** (Reasoning) |
@@ -79,11 +81,12 @@ This platform is a showcase of the Google Cloud & Firebase ecosystem.
 
 ### 🤖 Google AI & Machine Learning
 *   **Gemini 2.0 Flash:** Used for high-speed, low-latency tasks:
-    *   Real-time chat moderation (Bullying/Self-harm detection).
-    *   Sentiment analysis on Journal entries.
+    *   **Hinglish Chat:** System instructions specifically tuned to understand and reply in mixed-script languages ("Sun na yr...").
+    *   **Real-time Moderation:** Bullying/Self-harm detection in milliseconds.
+    *   **Sentiment Analysis:** On Journal entries to provide instant validation.
 *   **Gemini 1.5 Pro:** Used for high-reasoning tasks:
-    *   **Future Simulator:** generating detailed narrative arcs.
-    *   **Wisdom Extraction:** analyzing massive text corpuses for themes.
+    *   **Future Simulator:** Generating detailed narrative arcs for career paths.
+    *   **Wisdom Extraction:** Analyzing massive text corpuses for themes.
 *   **Vertex AI (Concept):** For training custom models on "Life Load" data to predict dropout rates.
 
 ### 📊 Data & Analytics
@@ -104,6 +107,27 @@ Designed for security, scalability, and strict isolation.
     *   `status` (string): 'active' | 'pending' | 'suspended'
     *   `stressBaseline` (number): 0-100 calculated metric.
 
+### `aiChats` (Collection)
+*   **Document ID:** `chatId`
+*   **Fields:**
+    *   `userId` (string)
+    *   `title` (string)
+    *   `updatedAt` (timestamp)
+
+### `microCommunities` (Collection)
+*   **Document ID:** `groupId`
+*   **Fields:**
+    *   `name` (string)
+    *   `type` (string): 'ai' | 'user'
+    *   `createdBy` (string): 'system' | userId
+    *   `memberCount` (number)
+
+### `communityMembers` (Collection)
+*   **Document ID:** `{groupId}_{userId}` (Composite Key)
+*   **Fields:**
+    *   `anonAlias` (string): e.g., "Neon Fox 429"
+    *   `joinedAt` (timestamp)
+
 ### `journals` (Collection)
 *   **Document ID:** `auto-id`
 *   **Fields:**
@@ -119,22 +143,6 @@ Designed for security, scalability, and strict isolation.
     *   `userId` (string)
     *   `score` (number): 1-5 Mood score.
     *   `timestamp` (timestamp)
-
-### `campfires` (Collection) -> `messages` (Sub-collection)
-*   **Path:** `campfires/{topicId}/messages/{messageId}`
-*   **Fields:**
-    *   `content` (string)
-    *   `sentimentScore` (number)
-    *   `isModerated` (boolean): True if AI flagged it.
-    *   `userName` (string): Anonymized alias (e.g., "Owl-8392").
-
-### `lifeLoads` (Collection)
-*   **Document ID:** `auto-id`
-*   **Fields:**
-    *   `academics` (number): 0-100
-    *   `financial` (number): 0-100
-    *   `social` (number): 0-100
-    *   Used for the **Dropout Radar**.
 
 ---
 
