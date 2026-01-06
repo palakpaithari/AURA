@@ -186,6 +186,13 @@ Aura is optimized for Vercel edge deployment.
 
 ---
 
+
+## 👥 Contributors
+
+- **Nikhil Shimpy** – [@NikhilShimpy](https://github.com/NikhilShimpy)
+
+---
+
 ## 🔮 7. Future Roadmap
 *   **Q3 2025:** Integration with Google Classroom API to auto-detect exam schedules and pre-schedule "Decompression Rituals."
 *   **Q4 2025:** B2B Admin Dashboards for University Counselors.
