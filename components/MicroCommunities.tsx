@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { UserProfile, Community, CommunityMessage, CommunityMember } from '../types';
 import { 
@@ -8,7 +9,7 @@ import {
 } from 'lucide-react';
 import { 
     collection, query, where, orderBy, onSnapshot, addDoc, 
-    serverTimestamp, limit, getDocs, doc, getDoc, setDoc, updateDoc 
+    serverTimestamp, limit, getDocs, doc, getDoc, setDoc, updateDoc, increment 
 } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { moderateMessage } from '../services/gemini';
@@ -258,6 +259,15 @@ export const MicroCommunities = ({ user }: { user: UserProfile }) => {
                 });
                 setCurrentUserAlias(newAlias);
                 
+                // NEW: Increment member count for sorting
+                try {
+                    await updateDoc(doc(db, 'microCommunities', activeGroup.id), {
+                        memberCount: increment(1)
+                    });
+                } catch (e) {
+                    console.error("Failed to update member count", e);
+                }
+                
                 // Trigger Join Animation
                 setJustJoinedId(activeGroup.id);
                 setTimeout(() => setJustJoinedId(null), 2000);
@@ -489,13 +499,13 @@ export const MicroCommunities = ({ user }: { user: UserProfile }) => {
                                 <select 
                                     value={sortBy}
                                     onChange={(e) => setSortBy(e.target.value as any)}
-                                    className="bg-transparent outline-none text-slate-300 font-medium cursor-pointer w-full"
+                                    className="bg-transparent outline-none text-slate-300 font-medium cursor-pointer w-full text-xs"
                                 >
-                                    <option value="recent">Recently Active</option>
-                                    <option value="newest">Newest Created</option>
-                                    <option value="oldest">Oldest Created</option>
-                                    <option value="popular">Most Members</option>
-                                    <option value="quiet">Fewest Members</option>
+                                    <option value="recent" className="bg-slate-800">Recently Active</option>
+                                    <option value="newest" className="bg-slate-800">Newest Created</option>
+                                    <option value="oldest" className="bg-slate-800">Oldest Created</option>
+                                    <option value="popular" className="bg-slate-800">Most Members</option>
+                                    <option value="quiet" className="bg-slate-800">Fewest Members</option>
                                 </select>
                             </div>
                         </div>
@@ -586,6 +596,11 @@ export const MicroCommunities = ({ user }: { user: UserProfile }) => {
                                                 <Check className="w-3 h-3 text-slate-600" />
                                             )}
                                         </div>
+                                    </div>
+                                    
+                                    {/* Member Count Stats for popular sorting feedback */}
+                                    <div className="mt-1 text-[9px] text-slate-600 flex items-center gap-1">
+                                        <Users className="w-2 h-2" /> {group.memberCount || 0} members
                                     </div>
                                 </button>
                             );
