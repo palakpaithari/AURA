@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { 
   AreaChart, Area, XAxis, Tooltip, ResponsiveContainer,
@@ -8,9 +9,9 @@ import {
   Activity, Battery, Brain, ShieldCheck, TrendingUp, Radio,
   Lightbulb, Sparkles, Loader2, Plus, Edit3, X, Check, ArrowUpRight, Users, Zap,
   Coffee, Sun, Moon, AlertTriangle, HeartPulse, Palette, Cpu, Flower2, BarChart3,
-  Award, RefreshCw, MessageSquare
+  Award, RefreshCw, MessageSquare, Trophy, Medal
 } from 'lucide-react';
-import { UserProfile, PeerTrafficNode, SleepLog, Ritual, MentorImpactAnalysis } from '../types';
+import { UserProfile, PeerTrafficNode, SleepLog, Ritual, MentorImpactAnalysis, Badge } from '../types';
 import { collection, query, where, onSnapshot, orderBy, limit, addDoc, serverTimestamp, getDocs } from 'firebase/firestore';
 import { db, sendNotification } from '../services/firebase';
 import { generateWisdomInsights, analyzeSleepPatterns, generateMentorImpactReport } from '../services/gemini';
@@ -400,81 +401,45 @@ const SleepIntelligence = ({ user }: { user: UserProfile }) => {
     );
 };
 
-// --- AURA DAILY BRIEF (UPDATED WITH MODAL) ---
-const AuraDailyBrief = () => {
-    const [isOpen, setIsOpen] = useState(false);
-
+// --- ACHIEVEMENTS / GAMIFICATION CARD ---
+const AchievementsCard = ({ user }: { user: UserProfile }) => {
+    const badges = user.badges || [];
+    
     return (
-        <>
-            <div className="glass-panel rounded-3xl p-6 relative bg-gradient-to-br from-indigo-900/40 to-slate-900/40 border border-indigo-500/20 flex flex-col justify-between h-full min-h-[300px]">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 bg-indigo-500/20 rounded-lg">
-                        <Sparkles className="w-6 h-6 text-indigo-400" />
-                    </div>
-                    <div>
-                        <h3 className="text-lg font-bold text-white">Daily Brief</h3>
-                        <p className="text-xs text-indigo-300">AI-Generated Focus</p>
-                    </div>
+        <div className="glass-panel rounded-3xl p-6 bg-gradient-to-br from-amber-500/10 to-transparent dark:from-amber-900/20 border border-amber-500/20 flex flex-col h-full min-h-[300px]">
+            <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center gap-2">
+                    <Trophy className="w-5 h-5 text-amber-500" />
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white">Achievements</h3>
                 </div>
-                
-                <div className="bg-slate-900/50 p-4 rounded-xl border border-indigo-500/10 mb-4 flex-1">
-                    <p className="text-sm text-slate-200 leading-relaxed italic">
-                        "Your academic load is peaking this week. Consider scheduling a 25m Focus Block before noon."
-                    </p>
+                <div className="flex items-center gap-1.5 bg-amber-500/20 px-3 py-1 rounded-lg border border-amber-500/20">
+                    <Zap className="w-3 h-3 text-amber-500 fill-current" />
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400">{user.streakDays || 0} Day Streak</span>
                 </div>
-
-                <button 
-                    onClick={() => setIsOpen(true)}
-                    className="w-full text-xs text-indigo-300 hover:text-indigo-200 flex items-center justify-between group p-2 hover:bg-indigo-500/10 rounded-lg transition-colors"
-                >
-                    <span>View Full Analysis</span>
-                    <ArrowUpRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
-                </button>
             </div>
 
-            {/* FULL ANALYSIS MODAL */}
-            {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-sm animate-fade-in">
-                    <div className="glass-panel w-full max-w-lg p-8 rounded-3xl border border-indigo-500/30 shadow-2xl relative bg-[#0f172a] max-h-[90vh] overflow-y-auto custom-scrollbar">
-                        <button 
-                            onClick={() => setIsOpen(false)}
-                            className="absolute top-4 right-4 p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white transition-colors"
-                        >
-                            <X className="w-5 h-5" />
-                        </button>
-
-                        <div className="mb-6 flex items-center gap-3">
-                            <BarChart3 className="w-8 h-8 text-indigo-500" />
-                            <h3 className="text-2xl font-bold text-white font-display">Deep Dive Analysis</h3>
-                        </div>
-
-                        <div className="space-y-6">
-                            <div className="bg-slate-800/50 p-4 rounded-xl border-l-4 border-indigo-500">
-                                <h4 className="text-sm font-bold text-indigo-300 mb-2 uppercase tracking-wider">Cognitive Load</h4>
-                                <p className="text-slate-300 text-sm leading-relaxed">
-                                    Your load balancer indicates high friction in <strong>Academics</strong>. 
-                                    Aura recommends shifting "Deep Work" sessions to morning hours.
-                                </p>
-                            </div>
-
-                            <div className="bg-slate-800/50 p-4 rounded-xl border-l-4 border-teal-500">
-                                <h4 className="text-sm font-bold text-teal-300 mb-2 uppercase tracking-wider">Recovery Strategy</h4>
-                                <ul className="text-slate-300 text-sm space-y-2 list-disc list-inside">
-                                    <li>Increase sleep duration by <strong>45 mins</strong> to clear adenosine buildup.</li>
-                                    <li>Engage in <strong>Non-Sleep Deep Rest (NSDR)</strong> post-lunch.</li>
-                                    <li>Use the <strong>40Hz Gamma</strong> flow tool.</li>
-                                </ul>
-                            </div>
-                            
-                            <div className="bg-gradient-to-r from-indigo-600 to-violet-600 p-4 rounded-xl text-white">
-                                <p className="font-bold mb-1">💡 Aura Insight</p>
-                                <p className="text-sm opacity-90">"Stress is just energy without direction. Let's aim it."</p>
-                            </div>
-                        </div>
+            <div className="flex-1 overflow-y-auto custom-scrollbar pr-2">
+                {badges.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center opacity-60">
+                        <Medal className="w-12 h-12 text-slate-400 mb-2" />
+                        <p className="text-sm text-slate-500">No badges earned yet.</p>
+                        <p className="text-xs text-slate-400 mt-1">Complete activities to unlock.</p>
                     </div>
-                </div>
-            )}
-        </>
+                ) : (
+                    <div className="grid grid-cols-1 gap-3">
+                        {badges.map((badge, idx) => (
+                            <div key={idx} className="flex items-center gap-3 p-3 bg-white/50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700">
+                                <div className="text-2xl">{badge.icon}</div>
+                                <div>
+                                    <p className="text-sm font-bold text-slate-900 dark:text-white">{badge.name}</p>
+                                    <p className="text-[10px] text-slate-500 dark:text-slate-400">{badge.description}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+        </div>
     );
 };
 
@@ -806,11 +771,11 @@ export const Dashboard = ({ user, setView }: { user: UserProfile, setView: (v: a
           </div>
       </div>
 
-      {/* SECTION 3: LIFE-LOAD & BRIEF & COMMUNITIES */}
+      {/* SECTION 3: LIFE-LOAD & BRIEF & ACHIEVEMENTS */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
           <LifeLoadBalancer user={user} />
           <div className="lg:col-span-1">
-             <AuraDailyBrief />
+             <AchievementsCard user={user} />
           </div>
            <div className="lg:col-span-1">
               <MicroCommunities />

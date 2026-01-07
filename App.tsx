@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { auth, logout, db } from './services/firebase';
 import firebase from 'firebase/compat/app';
@@ -127,7 +128,7 @@ export const App = () => {
             {view === 'reflect' && <Journal user={userProfile} />}
             {view === 'campfire' && <Campfire user={userProfile} />}
             {view === 'communities' && <MicroCommunities user={userProfile} />}
-            {view === 'flow' && <FocusZone />}
+            {view === 'flow' && <FocusZone user={userProfile} />}
             {view === 'future' && <FutureSimulator user={userProfile} />}
             {view === 'admin_panel' && userProfile.role === 'admin' && <AdminPanel />}
             

@@ -1,5 +1,8 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Play, Pause, RotateCcw, Volume2, Zap, Brain, Radio, Users, Target, Coffee, Wind, Check, Edit2 } from 'lucide-react';
+import { UserProfile } from '../types';
+import { updateGamification } from '../services/gamification';
 
 // --- AUDIO ENGINE (Web Audio API) ---
 class SoundEngine {
@@ -100,7 +103,7 @@ class SoundEngine {
 
 const audioPlayer = new SoundEngine();
 
-export const FocusZone = () => {
+export const FocusZone = ({ user }: { user?: UserProfile }) => {
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const [isActive, setIsActive] = useState(false);
   const [mode, setMode] = useState<'focus' | 'break'>('focus');
@@ -125,10 +128,13 @@ export const FocusZone = () => {
       }, 1000);
     } else if (timeLeft === 0) {
       setIsActive(false);
-      // Auto-switch mode suggestion could go here
+      // Gamification Trigger on Success
+      if (mode === 'focus' && user) {
+          updateGamification(user.uid, 'focus');
+      }
     }
     return () => clearInterval(interval);
-  }, [isActive, timeLeft]);
+  }, [isActive, timeLeft, mode, user]);
 
   // Audio Logic
   useEffect(() => {
