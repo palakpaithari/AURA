@@ -1,5 +1,14 @@
 
+
 export type UserRole = 'student' | 'admin' | 'peer_mentor';
+
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  earnedAt: any;
+}
 
 export interface UserProfile {
   uid: string;
@@ -12,6 +21,8 @@ export interface UserProfile {
   department?: string; // New field for aggregation
   stressBaseline?: number;
   streakDays?: number;
+  lastActiveDate?: string; // YYYY-MM-DD for streak calc
+  badges?: Badge[];
   lastCheckIn?: any;
   createdAt?: any;
   authProvider?: 'google' | 'email';

@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
     import { BookHeart, Send, Mic, Sparkles, Loader2, Lock, MicOff } from 'lucide-react';
     import { collection, addDoc, query, where, onSnapshot, serverTimestamp } from 'firebase/firestore';
     import { db } from '../services/firebase';
     import { UserProfile, JournalEntry } from '../types';
     import { analyzeJournalEntry } from '../services/gemini';
+    import { updateGamification } from '../services/gamification';
     
     export const Journal = ({ user }: { user: UserProfile }) => {
       const [entries, setEntries] = useState<JournalEntry[]>([]);
@@ -50,6 +52,10 @@ import React, { useState, useEffect } from 'react';
             timestamp: serverTimestamp(),
             isPrivate: true
           });
+          
+          // 3. Gamification
+          await updateGamification(user.uid, 'journal');
+
           setNewEntry('');
         } catch (e) {
           console.error(e);
