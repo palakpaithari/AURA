@@ -44,7 +44,7 @@ export const App = () => {
     localStorage.setItem('theme', theme);
   }, [theme]);
   
-  // AUTH STATE LISTENER
+  // Auth State Listner
   useEffect(() => {
     // Initialize AI immediately
     initGemini();
