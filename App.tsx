@@ -1,4 +1,4 @@
-
+// code
 import React, { useState, useEffect } from 'react';
 import { auth, logout, db } from './services/firebase';
 import firebase from 'firebase/compat/app';
