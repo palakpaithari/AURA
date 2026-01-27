@@ -24,7 +24,7 @@ export const App = () => {
   const [isAiActive, setIsAiActive] = useState(true); // Default true now
   const [loading, setLoading] = useState(true);
   
-  // Theme stat
+  // Theme state
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') {
         const saved = localStorage.getItem('theme');
