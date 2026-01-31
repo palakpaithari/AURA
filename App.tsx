@@ -80,7 +80,7 @@ export const App = () => {
       return <Auth onLoginSuccess={() => setLoading(true)} />;
   }
 
-  // --- PENDING APPROVAL (Peer Mentors) ---
+  // --- PENDING APPROVAL (Peer Mentors)
   if (userProfile.status === 'pending') {
       return (
           <div className="min-h-screen bg-slate-50 dark:bg-[#0f172a] flex items-center justify-center p-6 text-center">
