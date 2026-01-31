@@ -10,3 +10,5 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+//more features --> add as per req or future use 
