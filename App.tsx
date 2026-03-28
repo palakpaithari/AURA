@@ -75,7 +75,7 @@ export const App = () => {
       return <div className="h-screen bg-slate-50 dark:bg-[#0f172a] flex items-center justify-center text-violet-500"><Loader2 className="animate-spin w-10 h-10" /></div>;
   }
 
-  // --- UNAUTHENTICATED 
+  // UNAUTHENTICATED 
   if (!user || !userProfile) {
       return <Auth onLoginSuccess={() => setLoading(true)} />;
   }
